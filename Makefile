@@ -4,9 +4,13 @@ FLAGS = # -Wall -Wextra -Werror
 
 SRC = main.c \
 	parsing.c \
+	lstManagement.c \
+	debug.c \
               
 
 INCLUDE = main.h  \
+			parsing.h \
+			debug.h \
 
 SRCPATH = src
 OBJPATH = obj
