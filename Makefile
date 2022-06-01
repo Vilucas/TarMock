@@ -6,6 +6,8 @@ SRC = main.c \
 	parsing.c \
 	lstManagement.c \
 	debug.c \
+	archiveManagement.c \
+	createHeader.c \
               
 
 INCLUDE = main.h  \

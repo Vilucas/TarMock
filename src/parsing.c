@@ -70,8 +70,6 @@ static bool addOptions(char *av, data_t **Data, bool *fetchingArgs)
     return true;
 }
 
-
-
 bool parsing(char **av, data_t **Data)
 {
     bool fetchingOptions = true;
