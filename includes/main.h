@@ -8,6 +8,7 @@
 #include <stdint.h>
 #include <sys/types.h>
 #include <dirent.h>
+#include "tarMock.h"
 #define USAGE "usage ./mockTar <options> <archive_name> <arguments>\n\t-c Create a new archive containing the specified items.\n\t-r Like -c, but new entries are appended to the archive. The -f option is required.\n\t-t List archive contents to stdout.\n\t-u Like -r, but new entries are added only if they have a modification date newer than the corresponding entry in the archive. The -f option is required.\n\t-x Extract to disk from the archive. If a file with the same name appears more than once in the archive, each copy will be extracted, with later copies overwriting (replacing) earlier copies.\n "
 #define MAX_OPTIONS 6
 
@@ -28,7 +29,7 @@ enum fileType{
 typedef struct s_largs {
     char *arg_name;
     enum fileType type;
-    struct s_larfs *next;
+    struct s_largs *next;
 } largs_t;
 
 typedef struct s_data {
@@ -40,4 +41,7 @@ typedef struct s_data {
 bool parsing(char **av, data_t **Data);
 void addNode(largs_t **head, char *val, enum fileType type);
 void printInputData(data_t *Data);
+bool createAndAppendHeader(char *name, int fd, struct posix_header_mock **new);
+bool createArchive(data_t *Data);
+
 #endif //MAIN_H

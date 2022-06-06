@@ -13,6 +13,7 @@ SRC = main.c \
 INCLUDE = main.h  \
 			parsing.h \
 			debug.h \
+			tarMock.h \
 
 SRCPATH = src
 OBJPATH = obj

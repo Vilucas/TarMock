@@ -24,7 +24,7 @@ static void addArgument(char *av, data_t **Data)
     }
     struct dirent *dp;
     //determine type
-    while (dp = readdir(file))
+    while ((dp = readdir(file)))
     {
        dp->d_type = DT_DIR ? FolderType : FileType;
     }

@@ -1,23 +1,18 @@
-#include "tar.h"
+#include "tarMock.h"
 #include "main.h"
+#include <string.h>
+#include <sys/stat.h>
+#include <stdbool.h>
 
-
-bool appendName(struct posix_header *new, char *name)
+bool createAndAppendHeader(char *name, int fd, struct posix_header_mock **new)
 {
-    FILE *f = opendir(".");
-    struct dirent *dir;
+    struct stat s;
+    lstat(name, &s);
 
-    while ((dir = readdir(f)))
-    {
-
-    }
-}
-
-bool createAndAppendHeader(char *name, int fd)
-{
-    struct posix_header new;
-
-    strcpy(new->name, name);
-
+    if (*new == NULL)
+        return false;
+    (*new)->name = strdup(name);
+    (*new)->size = s.st_size;
+    return true;
     //write(fd, );
 }

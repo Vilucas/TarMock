@@ -28,6 +28,7 @@ int main(int ac, char **av)
     }
     if (Data->options.c)
         createArchive(Data);
+    /*
     else if (Data->options.r)
         appendToArchive(Data);
     //clear Args that won't be appended then append the result
@@ -37,5 +38,6 @@ int main(int ac, char **av)
         printArchive(Data);
     else if (Data->options.x)
         extractArchive(Data);
+        */
     return (0);
 }
