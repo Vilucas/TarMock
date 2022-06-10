@@ -3,6 +3,7 @@
         "main.h": "c",
         "tar.h": "c",
         "stat.h": "c",
-        "string.h": "c"
+        "string.h": "c",
+        "tarmock.h": "c"
     }
 }

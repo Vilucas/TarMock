@@ -16,10 +16,7 @@ static void addArgument(char *av, data_t **Data)
     
     if ((file = opendir(av)) == NULL)
     {
-        printf("pass 2\n");
         addNode(&((*Data)->arguments), av, FileType);
-        printf("pass 2\n");
-
         return;
     }
     struct dirent *dp;
@@ -32,11 +29,12 @@ static void addArgument(char *av, data_t **Data)
     addNode(&((*Data)->arguments), av, type);
 }
 
-static bool addOptions(char *av, data_t **Data, bool *fetchingArgs)
+static bool addOptions(char *av, data_t **Data, bool *fetchingArgs, int *i)
 {
     //
     if (!av || !av[0] || av[0] != '-' || (av[0] == '-' && av[1] == '-') || fetchingArgs == false)
     {
+        *i = *i - 1;
         *fetchingArgs = false;
         return false;
     }
@@ -73,17 +71,16 @@ static bool addOptions(char *av, data_t **Data, bool *fetchingArgs)
 bool parsing(char **av, data_t **Data)
 {
     bool fetchingOptions = true;
-    for (int i = 0; av[i]; i++)
+    for (int i = 1; av[i]; i++)
     {
-        //take arg, if not arg or Options have already been taken, store the file as either the name of the archive or an argument
         if (fetchingOptions)
-            addOptions(av[i], Data, &fetchingOptions);
+            addOptions(av[i], Data, &fetchingOptions, &i);
         else if ((*Data)->archive_name == NULL)
             addArchiveName(av[i], Data);
         else
             addArgument(av[i], Data);
     }
-    printInputData(*Data);
+    //printInputData(*Data);
     if (!(*Data)->archive_name || !(*Data)->arguments)
         return false;
     return true;

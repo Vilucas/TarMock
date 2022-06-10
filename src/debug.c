@@ -1,5 +1,5 @@
 #include "main.h"
-
+#include "tarMock.h"
 void printInputData(data_t *Data)
 {
     printf("Options:\n");
@@ -21,5 +21,11 @@ void printInputData(data_t *Data)
         i++;
         tmp = tmp->next;
     }
+}
 
+
+void   printfHeader(struct posix_header_mock *new)
+{
+    printf(" - Header - \n");
+    printf("%s\n%d\n", new->name, new->size);
 }
