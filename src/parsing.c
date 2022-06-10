@@ -1,5 +1,6 @@
 #include "parsing.h"
 #include "main.h"
+#include "sys/stat.h"
 
 static void addArchiveName(char *av, data_t **Data)
 {
@@ -23,10 +24,11 @@ static void addArgument(char *av, data_t **Data)
     //determine type
     while ((dp = readdir(file)))
     {
-       dp->d_type = DT_DIR ? FolderType : FileType;
+        //OP not handling the subdirectory, default type applied to all elements inside of the directory.
+       addNode(&((*Data)->arguments), av, FileType);
     }
     //add argument to list
-    addNode(&((*Data)->arguments), av, type);
+    
 }
 
 static bool addOptions(char *av, data_t **Data, bool *fetchingArgs, int *i)

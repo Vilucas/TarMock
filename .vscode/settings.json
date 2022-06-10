@@ -4,6 +4,10 @@
         "tar.h": "c",
         "stat.h": "c",
         "string.h": "c",
-        "tarmock.h": "c"
+        "tarmock.h": "c",
+        "parsing.h": "c",
+        "types.h": "c",
+        "stdint.h": "c",
+        "fcntl.h": "c"
     }
 }

@@ -28,6 +28,8 @@ int main(int ac, char **av)
     }
     if (Data->options.c)
         createArchive(Data);
+    else if (Data->options.x)
+        extractArchive(Data);
     /*
     else if (Data->options.r)
         appendToArchive(Data);
@@ -38,6 +40,6 @@ int main(int ac, char **av)
         printArchive(Data);
     else if (Data->options.x)
         extractArchive(Data);
-        */
+    */
     return (0);
 }

@@ -12,6 +12,8 @@ struct posix_header_mock
   int    size;                /* 124 */
 };
 
+#define MAX_NAME_LENGTH 100
+#define MAX_SIZE_LENGTH 12
 
 void   printfHeader(struct posix_header_mock *new);
 
