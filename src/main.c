@@ -1,5 +1,5 @@
 #include "main.h"
-
+#include "archiveManagement.h"
 bool checkFetchedOptions(struct arguments_t args)
 {
     if ((args.c && args.r) || 
@@ -30,14 +30,14 @@ int main(int ac, char **av)
         createArchive(Data);
     else if (Data->options.x)
         extractArchive(Data);
+    else if (Data->options.t)
+        printArchive(Data);
     /*
     else if (Data->options.r)
         appendToArchive(Data);
     //clear Args that won't be appended then append the result
     else if (Data->options.u && clearArgs(&Data))
         appendToArchive(Data);
-    else if (Data->options.t)
-        printArchive(Data);
     else if (Data->options.x)
         extractArchive(Data);
     */

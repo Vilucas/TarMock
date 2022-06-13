@@ -9,10 +9,9 @@
 bool appendItemToArchive(int fd, char *name, enum fileType type)
 {
     int fdFile;
-    char readBuffer[BLOCK_SIZE + 1];
-
+    char readBuffer[BLOCK_SIZE + 1] = {0};
+    int nb;
     struct posix_header_mock *new = malloc(sizeof(struct posix_header_mock));
-    char *sizeOfFile = malloc(sizeof(char) * 10);
 
     //open file to be added to archive
     if ((fdFile = open(name, O_RDONLY)) == -1)
@@ -20,24 +19,14 @@ bool appendItemToArchive(int fd, char *name, enum fileType type)
     //create the header
     if (!createAndAppendHeader(name, fd, &new))
         return false;
-    //write name + padding
-    write(fd, new->name, strlen(new->name));
-    if ((MAX_NAME_LENGTH -  strlen(new->name)) > 0)
-        write(fd, '\0', MAX_NAME_LENGTH);
 
-    //get size to char* format
-    int nb = sprintf(sizeOfFile, "%d", new->size);
-    sizeOfFile[nb] = '\0';
-    
-    //write size + padding
-    write(fd, sizeOfFile, strlen(sizeOfFile));
-    if ((MAX_SIZE_LENGTH - strlen(sizeOfFile)) > 0)
-        write(fd, '\0', strlen(sizeOfFile));
-    //reusing nb for convenience
     while ((nb = read(fdFile, readBuffer, BLOCK_SIZE)) > 0)
     {
+        if (nb == 0)
+            return true;
         readBuffer[nb] = '\0';
-        nb = write(fd, readBuffer, nb);
+        nb = write(fd, readBuffer, BLOCK_SIZE);
+        memset(readBuffer, '\0', BLOCK_SIZE);
     }
     return true;
 }
@@ -73,23 +62,25 @@ bool extractArchive(data_t *Data)
         printf("Archive didn't open");
         return false;
     }
+    
     char buffer[BLOCK_SIZE + 1];
     int ret;
     int fdFile;
+
     while (1)
     {
-        ret = read(fd, buffer, MAX_NAME_LENGTH);
-        //end of archive found;
+        ret = read(fd, buffer, MAX_NAME_LENGTH);       
         if (!buffer[0])
+            //end of archive found;
             return true;
         buffer[ret] = '\0';
-        if ((!(fdFile = open(buffer, O_CREAT | O_RDONLY))))
+        if ((!(fdFile = open(buffer, O_CREAT | O_RDWR, S_IRUSR | S_IWUSR | S_IRGRP | S_IROTH))))
         {
             printf("coudn't create of open one of the archive files");
             return false;
         }
         // reinit buffer to 0 to read the size;
-        buffer = {0};
+        memset(buffer, '\0', sizeof(buffer));
         if (!(ret = read(fd, buffer, MAX_SIZE_LENGTH)))
         {
             printf("couldn't read the size of one of the archive file. exiting...");
@@ -97,7 +88,7 @@ bool extractArchive(data_t *Data)
         }
         buffer[ret] = '\0';
         int size = atoi(buffer);
-        buffer = {0};
+        memset(buffer, '\0', sizeof(buffer));
         while(size > 0)
         {  
             if (!(ret = read(fd, buffer, BLOCK_SIZE)))
@@ -105,8 +96,15 @@ bool extractArchive(data_t *Data)
                 printf("Error happened while reading one of the archives files");
                 return false;
             }
+            printf("%d\n", size);
+            if (size < BLOCK_SIZE)
+            {
+                ret = size;
+                printf("%d\n", ret);
+            }
             buffer[ret] = '\0';
-            if (!(ret = write(fdFile, buffer, BLOCK_SIZE)))
+            printf("%d\n", size);
+            if (!(ret = write(fdFile, buffer, ret)))
             {
                 printf("Error: Couldn't write in one of the archive file");
                 return false;
@@ -116,4 +114,37 @@ bool extractArchive(data_t *Data)
         close(fdFile);
     }
     close(fd);
+}
+
+bool printArchive(data_t *Data)
+{
+    int fd = open(Data->archive_name, O_RDONLY);
+    char buffer[MAX_NAME_LENGTH + 1] = {0};
+    int readBytes = 0;
+
+    printf("Entering at point - %s\n", buffer);
+    while ((readBytes = read(fd, buffer, MAX_NAME_LENGTH)) > 0 && buffer[0])
+    {
+        buffer[readBytes] = '\0';
+        printf("BUFFER at point - %s\n", buffer);
+        memset(buffer, '\0', strlen(buffer));
+        if ((readBytes = read(fd, buffer, MAX_SIZE_LENGTH)) < 0)
+        {
+            printf("couldn't read the size of one of the archive file. exiting...");
+            return false;
+        }
+        buffer[readBytes] = '\0';
+        int size = atoi(buffer);
+        //printf("buffer for size = %s, %d\n", buffer, size);
+        char tmpBuff[size + 1];
+        if ((readBytes = read(fd, tmpBuff, size)) < 0)
+        {
+            printf("pass\n");
+            return false;
+        }
+        tmpBuff[readBytes] = '\0';
+        memset(buffer, '\0', strlen(buffer));
+    }
+    printf("buffer at exit %s\n", buffer);
+    return true;
 }

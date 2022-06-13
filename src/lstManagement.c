@@ -12,7 +12,6 @@ void addNode(largs_t **head, char *val, enum fileType type)
     {
 
         *head = new;
-        printf("%s\n", (*head)->arg_name);
         return;
     }
     //avoid deferencing head

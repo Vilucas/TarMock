@@ -83,7 +83,7 @@ bool parsing(char **av, data_t **Data)
             addArgument(av[i], Data);
     }
     //printInputData(*Data);
-    if (!(*Data)->archive_name || !(*Data)->arguments)
+    if (!(*Data)->archive_name)
         return false;
     return true;
 }
