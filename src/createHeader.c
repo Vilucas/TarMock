@@ -19,7 +19,6 @@ bool createAndAppendHeader(char *name, int fd, struct posix_header_mock **new)
     (*new)->size = s.st_size;
     write(fd, (*new)->name, MAX_NAME_LENGTH);
     //size
-    printf("SIZE =%d", (*new)->size);
     memset(sizeOfFile, '\0', MAX_SIZE_LENGTH);
     int nb = sprintf(sizeOfFile, "%d", (*new)->size);
     sizeOfFile[nb] = '\0';

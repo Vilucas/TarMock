@@ -121,12 +121,10 @@ bool printArchive(data_t *Data)
     int fd = open(Data->archive_name, O_RDONLY);
     char buffer[MAX_NAME_LENGTH + 1] = {0};
     int readBytes = 0;
-
-    printf("Entering at point - %s\n", buffer);
     while ((readBytes = read(fd, buffer, MAX_NAME_LENGTH)) > 0 && buffer[0])
     {
         buffer[readBytes] = '\0';
-        printf("BUFFER at point - %s\n", buffer);
+        printf("- %s\n", buffer);
         memset(buffer, '\0', strlen(buffer));
         if ((readBytes = read(fd, buffer, MAX_SIZE_LENGTH)) < 0)
         {
@@ -145,6 +143,5 @@ bool printArchive(data_t *Data)
         tmpBuff[readBytes] = '\0';
         memset(buffer, '\0', strlen(buffer));
     }
-    printf("buffer at exit %s\n", buffer);
     return true;
 }
